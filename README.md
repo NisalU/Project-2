@@ -3,7 +3,11 @@
 A pure-Python crypto trading signal bot that analyzes Binance market data with
 10 strategies and serves a live charting dashboard on your phone's local IP.
 
-No numpy / pandas — only `flask` and `requests`, so it installs cleanly on Termux.
+Built on **FastAPI + WebSocket** for realtime updates: live trade ticks move
+the last candle and the price with smooth animation, klines stream in as they
+form, and analysis snapshots / signals push instantly to every connected
+browser. No numpy / pandas — only `fastapi`, `uvicorn`, `websockets` and
+`requests`, so it installs cleanly on Termux.
 
 ## Strategies (confluence scored)
 

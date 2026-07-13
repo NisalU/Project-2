@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0f14" />
+  <title>Signal Bot — AI Trading Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot" id="live-dot" aria-hidden="true"></span>
+      <h1>SIGNAL<span>BOT</span></h1>
+      <span class="latency" id="latency" title="WebSocket round-trip latency"></span>
+    </div>
+    <div class="controls">
+      <label class="sr-only" for="symbol">Symbol</label>
+      <select id="symbol"></select>
+      <label class="sr-only" for="interval">Interval</label>
+      <select id="interval"></select>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Verdict banner -->
+    <section class="card verdict" id="verdict-card" aria-live="polite">
+      <div class="verdict-left">
+        <div class="price-row">
+          <span class="big-price" id="price">&mdash;</span>
+          <span class="chg" id="chg"></span>
+        </div>
+        <div class="tape" id="tape" aria-hidden="true"></div>
+        <div class="verdict-badge neutral" id="verdict">CONNECTING&hellip;</div>
+      </div>
+      <div class="gauge-wrap">
+        <div class="gauge-labels"><span>SHORT</span><span>NEUTRAL</span><span>LONG</span></div>
+        <div class="gauge"><div class="gauge-needle" id="gauge-needle"></div></div>
+        <div class="gauge-score" id="gauge-score">0</div>
+      </div>
+    </section>
+
+    <!-- Trade plan -->
+    <section class="card plan hidden" id="plan-card">
+      <h2>Trade Plan (ATR based)</h2>
+      <div class="plan-grid">
+        <div><span class="k">Entry</span><span class="v" id="plan-entry">&mdash;</span></div>
+        <div><span class="k">Stop</span><span class="v red" id="plan-stop">&mdash;</span></div>
+        <div><span class="k">TP 1</span><span class="v green" id="plan-tp1">&mdash;</span></div>
+        <div><span class="k">TP 2</span><span class="v green" id="plan-tp2">&mdash;</span></div>
+      </div>
+    </section>
+
+    <!-- Price chart -->
+    <section class="card">
+      <div class="card-head">
+        <h2>Live Price · EMA 7/25/99 · S/R · Fib · SMC</h2>
+        <div class="legend">
+          <span class="lg lg-ema7">EMA7</span>
+          <span class="lg lg-ema25">EMA25</span>
+          <span class="lg lg-ema99">EMA99</span>
+        </div>
+      </div>
+      <div id="chart" class="chart-main" role="img" aria-label="Live candlestick price chart with indicators"></div>
+    </section>
+
+    <!-- CVD chart -->
+    <section class="card">
+      <div class="card-head"><h2>Cumulative Volume Delta (CVD)</h2></div>
+      <div id="cvd-chart" class="chart-cvd" role="img" aria-label="Cumulative volume delta chart"></div>
+    </section>
+
+    <!-- Confluence breakdown -->
+    <section class="card">
+      <div class="card-head"><h2>Confluence Breakdown</h2></div>
+      <div id="breakdown" class="breakdown"></div>
+    </section>
+
+    <!-- Fundamentals -->
+    <section class="card" id="fund-card">
+      <div class="card-head"><h2>Fundamentals</h2></div>
+      <div class="plan-grid" id="fundamentals">
+        <div><span class="k">Funding</span><span class="v" id="f-funding">&mdash;</span></div>
+        <div><span class="k">OI &Delta; 24h</span><span class="v" id="f-oi">&mdash;</span></div>
+        <div><span class="k">Long/Short</span><span class="v" id="f-ls">&mdash;</span></div>
+        <div><span class="k">Mark</span><span class="v" id="f-mark">&mdash;</span></div>
+      </div>
+    </section>
+
+    <!-- Signal feed -->
+    <section class="card">
+      <div class="card-head"><h2>Signal Feed</h2></div>
+      <div id="signals" class="signals"><p class="empty">No signals yet &mdash; waiting for confluence &ge; threshold.</p></div>
+    </section>
+
+    <footer class="disclaimer">
+      Educational tool &mdash; not financial advice. Signals are algorithmic confluence
+      scores, not guarantees. Trade at your own risk.
+    </footer>
+  </main>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
